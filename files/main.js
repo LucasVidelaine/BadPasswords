@@ -48,6 +48,8 @@ function generatePasswords() {
     
     const resultElement = document.getElementById('result');
     resultElement.innerHTML = weakPasswords.join('<br>');
+
+    document.getElementById("hideandseek").style.visibility = "visible"; 
 }
 
 function copyPasswords(){

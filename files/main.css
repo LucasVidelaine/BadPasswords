@@ -27,18 +27,7 @@ code {
     margin-bottom: 30px;
 }
 
-input {
-    border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
-    font-size: 1.1em;
-    height: 2.8em;
-    outline: none;
-    padding-left: 0.75em;
-    width: 80%;
-}
-
-button.left,
-button.right {
+button {
     background-color: #ff7900;
     color: #fff;
     font-size: 1.1em;
@@ -46,16 +35,23 @@ button.right {
     height: 3.03em;
     outline: none;
     border: none;
-}
-
-button.left {
-    border-radius: 5px 0 0 5px;
-}
-
-button.right {
-    border-radius: 0 5px 5px 0;
+    border-radius: 3px 3px 3px 3px;
 }
 
 button:hover {
     background-color: #dd6903;
+}
+
+#hideandseek {
+    visibility: hidden;
+}
+
+input {
+    border: 1px solid #ccc;
+    border-radius: 3px 3px 3px 3px;
+    font-size: 1.1em;
+    height: 2.8em;
+    outline: none;
+    padding-left: 0.75em;
+    width: 80%;
 }
