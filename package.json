@@ -1,0 +1,19 @@
+{
+  "name": "badpasswords",
+  "version": "1.0.0",
+  "description": "Create bad passwords based on a company name, for security-awareness and authorized password auditing.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "prettier": "^3.3.3",
+    "vitest": "^2.1.4"
+  }
+}

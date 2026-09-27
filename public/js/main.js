@@ -1,96 +1,68 @@
-function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
+import { generateWeakPasswords } from './generator.js';
 
-function toPartialLeetSpeak(str){
-    const leetMap = { 'e': '3', 'a': '@', 's': '5', 'o': '0' };
-    // Iterate through the characters of the string
-    for (let i = 0; i < str.length; i++) {
-        // Check if the current character has a leetspeak equivalent
-        if (leetMap.hasOwnProperty(str[i])) {
-            // Replace the first occurrence of the character with its leetspeak equivalent
-            const leetspeakChar = leetMap[str[i]];
-            const partLeetStr = str.substring(0, i) + leetspeakChar + str.substring(i + 1);
-            return partLeetStr;
-        }
-    }
-    // If no leetspeak conversion is possible, return null
-    return null;
-}
-
-function toFullLeetSpeak(str) {
-    const leetMap = { 'e': '3', 'a': '@', 's': '5', 'o': '0' };
-    const fullLeetStr = str.toLowerCase().split('').map(char => leetMap[char] || char).join('');
-    if (fullLeetStr === str) {
-        return null;
-    } else {
-        return fullLeetStr;
+function renderPasswords(passwords) {
+    const result = document.getElementById('result');
+    result.replaceChildren();
+    for (const password of passwords) {
+        const line = document.createElement('div');
+        line.className = 'password';
+        line.textContent = password; // textContent avoids any HTML injection
+        result.appendChild(line);
     }
 }
 
-function generateWeakPasswords(baseString) {
-    const variations = new Set();
-
-    function addVariations(inputString) {
-        variations.add(inputString);
-        variations.add(inputString + '!');
-        variations.add(inputString + '!!');
-    }
-
-    baseString = baseString.toLowerCase();
-    
-    addVariations(baseString);
-    addVariations(baseString + '2023');
-    addVariations(baseString + '2024');
-    addVariations(baseString + '123');
-    addVariations(baseString + '1234');
-
-    const partLeetString = toPartialLeetSpeak(baseString);
-    if (partLeetString != null){
-        addVariations(partLeetString);
-        addVariations(partLeetString + '2023');
-        addVariations(partLeetString + '2024');
-        addVariations(partLeetString + '123');
-        addVariations(partLeetString + '1234');
-    }
-
-    const leetString = toFullLeetSpeak(baseString);
-    if (leetString != null){
-        addVariations(leetString);
-        addVariations(leetString + '2023');
-        addVariations(leetString + '2024');
-        addVariations(leetString + '123');
-        addVariations(leetString + '1234');
-    }
-
-    const result = new Set();
-
-    for (const variation of Array.from(variations)) {
-        result.add(variation);
-        result.add(capitalizeFirstLetter(variation));
-    }
-  
-    return Array.from(result);
+function clearResult() {
+    document.getElementById('result').replaceChildren();
 }
-  
+
+function setAlert(message) {
+    document.getElementById('alert').textContent = message;
+}
+
 function generatePasswords() {
-    const baseString = document.getElementById('baseString').value;
-    if (baseString != ''){
-        const weakPasswords = generateWeakPasswords(baseString);
-        
-        document.getElementById('result').innerHTML = weakPasswords.join('<br>');
-        document.getElementById('hideandseek').style.visibility = "visible";
-        document.getElementById('alert').innerHTML = "";
-        document.getElementById('baseString').style.borderColor = "";
+    const input = document.getElementById('baseString');
+    const baseString = input.value.trim();
 
-    } else {
-        document.getElementById('alert').innerHTML = "Error, you must provide a name.";
-        document.getElementById('baseString').style.borderColor = "red";
-        document.getElementById('result').innerHTML = "";
+    if (baseString === '') {
+        setAlert('Error, you must provide a name.');
+        input.style.borderColor = 'red';
+        clearResult();
+        document.getElementById('copyAll').style.visibility = 'hidden';
+        return;
     }
+
+    const weakPasswords = generateWeakPasswords(baseString);
+    renderPasswords(weakPasswords);
+    document.getElementById('copyAll').style.visibility = 'visible';
+    setAlert('');
+    input.style.borderColor = '';
 }
 
-function copyPasswords(){
-    const passwords = document.getElementById('result').innerHTML;
-    navigator.clipboard.writeText(passwords.replace(/<br>/g, '\n'));
+async function copyPasswords() {
+    const lines = Array.from(document.querySelectorAll('#result .password')).map(
+        (el) => el.textContent
+    );
+    if (lines.length === 0) return;
+
+    const button = document.getElementById('copyAll');
+    const original = button.textContent;
+    try {
+        await navigator.clipboard.writeText(lines.join('\n'));
+        button.textContent = 'Copied!';
+    } catch {
+        button.textContent = 'Copy failed';
+    }
+    setTimeout(() => {
+        button.textContent = original;
+    }, 1500);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('generate').addEventListener('click', generatePasswords);
+    document.getElementById('copyAll').addEventListener('click', copyPasswords);
+    document.getElementById('baseString').addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            generatePasswords();
+        }
+    });
+});
