@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Create bad passwords!">
     <title>Bad Passwords</title>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
     <link href="css/main.css" rel="stylesheet">
 </head>
 <body>
@@ -16,19 +16,18 @@
     <div id="root">
         <div class="App">
             <header class="App-header">
-                <a href="https://orangecyberdefense.com/" target="_blank">
+                <a href="https://orangecyberdefense.com/" target="_blank" rel="noopener noreferrer">
                     <img src="img/logo.png" alt="Logo Orange Cyberdefense">
                 </a>
                 <div id="searchbox">
-                    <button id="hideandseek" onclick="copyPasswords()">Copy All</button>
-                    <input type="text" id="baseString" placeholder="Enter company name">
-                    <button onclick="generatePasswords()">Generate</button>
-                    <div id="alert">
-                    </div>
+                    <button id="copyAll" type="button">Copy All</button>
+                    <label for="baseString" class="visually-hidden">Company name</label>
+                    <input type="text" id="baseString" placeholder="Enter company name" autocomplete="off">
+                    <button id="generate" type="button">Generate</button>
+                    <div id="alert" role="alert" aria-live="assertive"></div>
                 </div>
                 <br>
-                <div id="result">
-                </div>
+                <div id="result" aria-live="polite"></div>
             </header>
         </div>
     </div>
